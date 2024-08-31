@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记账应用</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group button {
+            background: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>记账应用</h1>
+        <div class="form-group">
+            <label for="amount">金额:</label>
+            <input type="number" id="amount" placeholder="输入金额" />
+        </div>
+        <div class="form-group">
+            <label for="purpose">用途:</label>
+            <input type="text" id="purpose" placeholder="输入用途" />
+        </div>
+        <div class="form-group">
+            <button onclick="addEntry()">添加</button>
+        </div>
+        <table id="entryTable">
+            <thead>
+                <tr>
+                    <th>金额</th>
+                    <th>用途</th>
+                    <th>时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            displayEntries();
+        });
+
+        function addEntry() {
+            const amount = document.getElementById('amount').value;
+            const purpose = document.getElementById('purpose').value;
+            if (amount && purpose) {
+                const entries = JSON.parse(localStorage.getItem('entries')) || [];
+                entries.push({ amount: parseFloat(amount), purpose: purpose, time: new Date().toLocaleString() });
+                localStorage.setItem('entries', JSON.stringify(entries));
+                displayEntries();
+                document.getElementById('amount').value = '';
+                document.getElementById('purpose').value = '';
+            }
+        }
+
+        function displayEntries() {
+            const entries = JSON.parse(localStorage.getItem('entries')) || [];
+            const tbody = document.querySelector('#entryTable tbody');
+            tbody.innerHTML = '';
+
+            entries.forEach(entry => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${entry.amount}</td><td>${entry.purpose}</td><td>${entry.time}</td>`;
+                tbody.appendChild(row);
+            });
+        }
+    </script>
+</body>
+</html>
